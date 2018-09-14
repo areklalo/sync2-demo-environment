@@ -1,0 +1,79 @@
+# Generated automatically by openmrs SDK
+version: '2'
+
+services:
+  db:
+    image: mysql:5.6
+    container_name: sync2_mysql
+    command: "mysqld --character-set-server=utf8 --collation-server=utf8_general_ci"
+    environment:
+      MYSQL_DATABASE: openmrs
+      MYSQL_ROOT_PASSWORD: Admin123
+      MYSQL_USER: openmrs
+      MYSQL_PASSWORD: Admin123
+    volumes:
+      - ./dbdump:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+
+  child1:
+    build: child1
+    image: referenceapplication_child1:2.6.1
+    container_name: sync2_child1
+    depends_on:
+      - db
+    environment:
+      DB_DATABASE: child1
+      DB_HOST: db
+      DB_USERNAME: root
+      DB_PASSWORD: Admin123
+      DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
+      DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
+      MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+    volumes:
+      - child1-data:/usr/local/tomcat/.OpenMRS
+      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+
+  child2:
+    build: child2
+    image: referenceapplication_child2:2.6.1
+    container_name: sync2_child2
+    depends_on:
+      - db
+    environment:
+      DB_DATABASE: child2
+      DB_HOST: db
+      DB_USERNAME: root
+      DB_PASSWORD: Admin123
+      DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
+      DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
+      MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+    volumes:
+      - child2-data:/usr/local/tomcat/.OpenMRS
+      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+
+  parent:
+    build: parent
+    image: referenceapplication_parent:2.6.1
+    container_name: sync2_parent
+    depends_on:
+      - db
+    environment:
+      DB_DATABASE: parent
+      DB_HOST: db
+      DB_USERNAME: root
+      DB_PASSWORD: Admin123
+      DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
+      DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
+      MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+    volumes:
+      - parent-data:/usr/local/tomcat/.OpenMRS
+      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+
+volumes:
+  db-data:
+  child1-data:
+  child2-data:
+  parent-data:

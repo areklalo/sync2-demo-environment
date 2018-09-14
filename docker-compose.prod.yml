@@ -1,0 +1,15 @@
+# Generated automatically by openmrs SDK
+version: '2'
+
+services:
+  child1:
+    ports:
+      - "${TOMCAT_PORT_CHILD1}:8080"
+
+  child2:
+    ports:
+      - "${TOMCAT_PORT_CHILD2}:8080"
+
+  parent:
+    ports:
+      - "${TOMCAT_PORT_PARENT}:8080"
