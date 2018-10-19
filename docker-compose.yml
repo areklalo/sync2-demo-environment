@@ -31,7 +31,7 @@ services:
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
     volumes:
       - child1-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
       - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
 
   child2:
@@ -50,7 +50,7 @@ services:
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
     volumes:
       - child2-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
       - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
 
   parent:
@@ -69,7 +69,7 @@ services:
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
     volumes:
       - parent-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
       - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
 
 volumes:
