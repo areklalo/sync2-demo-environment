@@ -16,8 +16,8 @@ $ docker-compose up
 
 Application will be accessible on:
 * parent - http://localhost:8086/openmrs
-* child1 - http://localhost:8088/openmrs
-* child2 - http://localhost:8087/openmrs
+* child1 - http://localhost:8087/openmrs
+* child2 - http://localhost:8088/openmrs
 
 If you made any changes (modified modules/owas/war) to the distro run:
 ```
