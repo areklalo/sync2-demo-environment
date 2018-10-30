@@ -1,4 +1,3 @@
-# Generated automatically by openmrs SDK
 version: '2'
 
 services:
@@ -11,12 +10,17 @@ services:
       MYSQL_ROOT_PASSWORD: Admin123
       MYSQL_USER: openmrs
       MYSQL_PASSWORD: Admin123
+    ports:
+      - "${MYSQL_DEV_PORT}:3306"
     volumes:
       - ./dbdump:/docker-entrypoint-initdb.d
       - db-data:/var/lib/mysql
 
   child1:
-    build: child1
+    build:
+      context: instance
+      args:
+        INSTANCE_NAME: child1
     image: referenceapplication_child1:2.6.1
     container_name: sync2_child1
     depends_on:
@@ -29,13 +33,19 @@ services:
       DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
       DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+      DEBUG: 'true'
+    ports:
+      - "${TOMCAT_DEV_PORT_CHILD1}:8080"
+      - "${TOMCAT_DEV_DEBUG_PORT_CHILD1}:1044"
     volumes:
       - child1-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
-      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/
 
   child2:
-    build: child2
+    build:
+      context: instance
+      args:
+        INSTANCE_NAME: child2
     image: referenceapplication_child2:2.6.1
     container_name: sync2_child2
     depends_on:
@@ -48,13 +58,19 @@ services:
       DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
       DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+      DEBUG: 'true'
+    ports:
+      - "${TOMCAT_DEV_PORT_CHILD2}:8080"
+      - "${TOMCAT_DEV_DEBUG_PORT_CHILD2}:1044"
     volumes:
       - child2-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
-      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/
 
   parent:
-    build: parent
+    build:
+      context: instance
+      args:
+        INSTANCE_NAME: parent
     image: referenceapplication_parent:2.6.1
     container_name: sync2_parent
     depends_on:
@@ -67,10 +83,13 @@ services:
       DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
       DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+      DEBUG: 'true'
+    ports:
+      - "${TOMCAT_DEV_PORT_PARENT}:8080"
+      - "${TOMCAT_DEV_DEBUG_PORT_PARENT}:1044"
     volumes:
       - parent-data:/usr/local/tomcat/.OpenMRS
-      - /usr/local/tomcat/.OpenMRS/modules/ # used to mount persistent docker volume for modules
-      - /usr/local/tomcat/.OpenMRS/owa/     # used to mount persistent docker volume for owa
+      - ./modules:/usr/local/tomcat/.OpenMRS/modules/
 
 volumes:
   db-data:
