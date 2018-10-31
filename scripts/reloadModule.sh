@@ -2,8 +2,9 @@
 function main () {
   local module_path='';
   local should_build=0;
+  local should_reset=1;
 
-  while getopts ':hp:b' option; do
+  while getopts ':hp:bw' option; do
     case "$option" in
       h) usage
          exit
@@ -11,6 +12,8 @@ function main () {
       b) should_build=1
          ;;
       p) module_path=$OPTARG
+         ;;
+      w) should_reset=0;
          ;;
       :) printf "missing argument for -%s\n" "$OPTARG" >&2
          usage
@@ -34,7 +37,7 @@ function main () {
     buildModule $module_path
   fi
 
-  reloadModule $module_path
+  reloadModule $module_path $should_reset
 }
 
 function usage() { echo "$(basename "$0") [-h] [-b] [-p path_to_module]
@@ -43,7 +46,9 @@ function usage() { echo "$(basename "$0") [-h] [-b] [-p path_to_module]
 where:
     -h  show this help text
     -b  build the module before reload
-    -p  path to module [mandatory]"  >&2
+    -p  path to module [mandatory]
+    -w  reload module without restart demo environment (module will be available on server after manually restart)"
+    >&2
 }
 
 function buildModule() {
@@ -55,6 +60,8 @@ function reloadModule() {
   local scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )";
   local moduleDir=$1;
   local omodDir=$moduleDir'/omod/target';
+  local should_reset=$2;
+
   echo "RELOAD THE $moduleDir MODULE";
   if [ ! -d $omodDir ]; then
       echo "Directory $omodDir not found!";
@@ -70,7 +77,9 @@ function reloadModule() {
   cp $omodFile $scriptDir/../modules
   sendFileToDockerContainers $omodFile
 
-  $scriptDir/manageDemo.sh -r
+  if [ $should_reset -ne 0 ]; then
+    $scriptDir/manageDemo.sh -r
+  fi
 }
 
 function sendFileToDockerContainers() {
