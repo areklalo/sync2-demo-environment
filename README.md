@@ -9,6 +9,11 @@ Run openmrs distributions and mysql as docker containers.
 
 ## Development
 
+To run the demo environment you need to execute (if it is the first time please add "-b" parameter to build Docker images):
+```
+$ ./scripts/manageDemo.sh -u
+```
+
 Application will be accessible on:
 * parent - http://localhost:8086/openmrs
 * child1 - http://localhost:8087/openmrs
@@ -17,6 +22,7 @@ Application will be accessible on:
 All OpenMRS instances use the same set of modules. Which can be found in the "modules" directory.
 
 ### reloadModule script
+
 In order to reload the OpenMRS module you can use prepared script:
 
 ```
