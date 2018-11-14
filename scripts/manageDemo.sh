@@ -85,7 +85,7 @@ function startDocker() {
 }
 
 function logDocker() {
-  (cd $SCRIPT_DIR/..; docker-compose logs -f);
+  (cd $SCRIPT_DIR/..; docker-compose logs --tail 1000 -f);
 }
 
 function resetDocker() {
