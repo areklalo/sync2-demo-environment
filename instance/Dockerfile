@@ -22,7 +22,8 @@ COPY Dockerfile /root/Dockerfile
 
 COPY $INSTANCE_NAME.sync2.conf.json /usr/local/tomcat/.OpenMRS/configuration/sync2.json
 
-# COPY modules /usr/local/tomcat/.OpenMRS/modules
 COPY owa /usr/local/tomcat/.OpenMRS/owa
+RUN mkdir -p /root/projectDir
+COPY openmrs-distro.properties /usr/local/tomcat/.OpenMRS/
 
 CMD ["/usr/local/tomcat/startup.sh"]
