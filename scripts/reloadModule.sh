@@ -1,6 +1,6 @@
 #!/bin/bash
 function main () {
-  local module_path='';
+  local module_path=`pwd`;
   local should_build=0;
   local should_reset=1;
 
@@ -46,7 +46,7 @@ function usage() { echo "$(basename "$0") [-h] [-b] [-p path_to_module]
 where:
     -h  show this help text
     -b  build the module before reload
-    -p  path to module [mandatory]
+    -p  path to module (the value of 'pwd' by default)
     -w  reload module without restart demo environment (module will be available on server after manually restart)"
     >&2
 }

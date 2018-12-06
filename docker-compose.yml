@@ -40,6 +40,7 @@ services:
     volumes:
       - child1-data:/usr/local/tomcat/.OpenMRS
       - ./modules:/usr/local/tomcat/.OpenMRS/modules/
+      - child2-data:/root/projectDir
 
   child2:
     build:
@@ -65,6 +66,7 @@ services:
     volumes:
       - child2-data:/usr/local/tomcat/.OpenMRS
       - ./modules:/usr/local/tomcat/.OpenMRS/modules/
+      - child2-data:/root/projectDir
 
   parent:
     build:
@@ -90,6 +92,7 @@ services:
     volumes:
       - parent-data:/usr/local/tomcat/.OpenMRS
       - ./modules:/usr/local/tomcat/.OpenMRS/modules/
+      - parent-data:/root/projectDir
 
 volumes:
   db-data:
